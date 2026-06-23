@@ -1,0 +1,21 @@
+package utils
+
+import (
+	"github.com/MensahPrince/mini_auth/db"
+	"github.com/MensahPrince/mini_auth/types"
+)
+func CheckDB() types.DBSTATUS{
+	_, err := db.Connect()
+	
+	if err != nil{
+		return	types.DBSTATUS{
+			Success: false,
+			Message: "Database Connection Failed",
+		}
+	}
+
+	return types.DBSTATUS{
+		Success: true,
+		Message: "Connected",
+	}
+}
