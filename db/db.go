@@ -25,7 +25,7 @@ func Connect() (*sql.DB, error) {
 	dbUser := os.Getenv("DB_USER")
 
 	dsn := fmt.Sprintf(
-		"%s:%s@tcp(%s:3306)/ %s", 
+		"%s:%s@tcp(%s:3306)/%s", 
 		dbUser, 
 		dbPass, 
 		dbHost, 
