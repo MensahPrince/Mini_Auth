@@ -6,6 +6,7 @@ import (
 	"github.com/MensahPrince/mini_auth/db"
 	"github.com/MensahPrince/mini_auth/types"
 	"github.com/gofiber/fiber/v3"
+	"github.com/MensahPrince/mini_auth/utils"
 )
 
 func Register(c fiber.Ctx) error {
@@ -22,12 +23,17 @@ func Register(c fiber.Ctx) error {
 		})
 	}
 
+	hashedPassphrase, err := utils.BcryptHash(req.Password)
+	if err != nil{
+		c.SendString("Failed to Hash Password")
+	}
+	
 	//Write to Database
 	_, err = database.Exec(
 		"INSERT INTO users (name, email, password) VALUES (?,?,?)",
 		req.Name,
 		req.Email,
-		req.Password,
+		hashedPassphrase,
 	)
 
 	if err != nil {

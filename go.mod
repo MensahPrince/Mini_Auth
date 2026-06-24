@@ -6,6 +6,7 @@ require (
 	github.com/go-sql-driver/mysql v1.10.0
 	github.com/gofiber/fiber/v3 v3.3.0
 	github.com/joho/godotenv v1.5.1
+	golang.org/x/crypto v0.53.0
 )
 
 require (
@@ -21,7 +22,6 @@ require (
 	github.com/tinylib/msgp v1.6.4 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasthttp v1.71.0 // indirect
-	golang.org/x/crypto v0.53.0 // indirect
 	golang.org/x/net v0.55.0 // indirect
 	golang.org/x/sys v0.46.0 // indirect
 	golang.org/x/text v0.38.0 // indirect
