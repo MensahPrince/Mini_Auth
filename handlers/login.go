@@ -29,8 +29,20 @@ func Login(c fiber.Ctx) error {
 		"SELECT EXISTS(SELECT 1 FROM users WHERE email = ?)",
 		req.Email,
 	).Scan(&state)
+	if &state == false {
+		c.JSON(fiber.Map{
+			"response" : "User does not exist",
+		})
+	}
 
-	return c.JSON(fiber.Map{
-		"success": state,
-	})
-}
+   var hashedPassword string
+
+   err := database.QueryRow(
+    "SELECT password FROM users WHERE email = ?",
+    req.Email,
+   ).Scan(&hashedPassword)
+
+
+		
+
+	var ComparedHashResult = utils.BcryptCompareHash(types.USERLOGIN.Password, hashedPassword)
