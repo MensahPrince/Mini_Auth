@@ -10,3 +10,8 @@ type USER struct {
 	Name     string
 	Email    string
 }
+
+type USERLOGIN struct {
+	Email    string
+	Password string
+}
