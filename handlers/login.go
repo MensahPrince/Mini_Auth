@@ -3,16 +3,15 @@ package handlers
 import (
 	"github.com/MensahPrince/mini_auth/db"
 	"github.com/MensahPrince/mini_auth/types"
+	"github.com/MensahPrince/mini_auth/utils"
 	"github.com/gofiber/fiber/v3"
 )
 
 func Login(c fiber.Ctx) error {
 	database, err := db.Connect()
 
-	var state bool
-
 	if err != nil {
-		c.Status(400).JSON(fiber.Map{
+		return c.Status(400).JSON(fiber.Map{
 			"error": "Failed to Initialize",
 		})
 	}
@@ -25,24 +24,28 @@ func Login(c fiber.Ctx) error {
 		})
 	}
 
+	var hashedPassword string
+
 	err = database.QueryRow(
-		"SELECT EXISTS(SELECT 1 FROM users WHERE email = ?)",
+		"SELECT password FROM users WHERE email = ?",
 		req.Email,
-	).Scan(&state)
-	if &state == false {
-		c.JSON(fiber.Map{
-			"response" : "User does not exist",
+	).Scan(&hashedPassword)
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"message": "Invalid Credentials",
 		})
 	}
 
-   var hashedPassword string
+	//corrected password check
+	if !utils.BcryptCompareHash(req.Password, hashedPassword) {
+		return c.Status(400).JSON(fiber.Map{
+			"message": "Invalid Credentials",
+		})
+	}
 
-   err := database.QueryRow(
-    "SELECT password FROM users WHERE email = ?",
-    req.Email,
-   ).Scan(&hashedPassword)
+	return c.Status(200).JSON(fiber.Map{
+		"success": true,
+	})
 
-
-		
-
-	var ComparedHashResult = utils.BcryptCompareHash(types.USERLOGIN.Password, hashedPassword)
+}
