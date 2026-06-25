@@ -15,3 +15,10 @@ type USERLOGIN struct {
 	Email    string
 	Password string
 }
+
+type USEROBJECT struct {
+	Id int
+	Password string
+	Name string
+	Email string
+}
