@@ -8,13 +8,7 @@ import (
 )
 
 func Login(c fiber.Ctx) error {
-	database, err := db.Connect()
-
-	if err != nil {
-		return c.Status(400).JSON(fiber.Map{
-			"error": "Failed to Initialize",
-		})
-	}
+	database := db.DB
 
 	var req types.USERLOGIN
 
@@ -26,7 +20,7 @@ func Login(c fiber.Ctx) error {
 
 	var hashedPassword string
 
-	err = database.QueryRow(
+	err := database.QueryRow(
 		"SELECT password FROM users WHERE email = ?",
 		req.Email,
 	).Scan(&hashedPassword)
@@ -37,7 +31,6 @@ func Login(c fiber.Ctx) error {
 		})
 	}
 
-	//corrected password check
 	if !utils.BcryptCompareHash(req.Password, hashedPassword) {
 		return c.Status(400).JSON(fiber.Map{
 			"message": "Invalid Credentials",
@@ -47,5 +40,4 @@ func Login(c fiber.Ctx) error {
 	return c.Status(200).JSON(fiber.Map{
 		"success": true,
 	})
-
 }

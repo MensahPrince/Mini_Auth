@@ -1,8 +1,6 @@
 package handlers
 
 import (
-	"log"
-
 	"github.com/MensahPrince/mini_auth/db"
 	"github.com/MensahPrince/mini_auth/types"
 	"github.com/MensahPrince/mini_auth/utils"
@@ -10,10 +8,8 @@ import (
 )
 
 func Register(c fiber.Ctx) error {
-	database, err := db.Connect()
-	if err != nil {
-		log.Fatal("Failed to Initialize", err)
-	}
+	db.Connect()
+	var database = db.DB
 	var req types.USER
 
 	//Check for JSON body
