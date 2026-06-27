@@ -11,4 +11,5 @@ func SetupAuthRoutes(app *fiber.App) {
 	app.Post("/register", handlers.Register)
 	app.Post("/login", handlers.Login)
 	app.Get("/profile", middleware.JWTMiddleware, handlers.FetchProfile)
+	app.Post("/edit/:param", middleware.JWTMiddleware, handlers.EditHandler)
 }
