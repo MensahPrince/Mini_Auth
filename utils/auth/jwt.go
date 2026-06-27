@@ -9,6 +9,7 @@ import (
 )
 
 //A simple JWT Generator generates a jwt token with empty data. {} . As such it is necessary to include claims: These are metadata about a session. or basically metadata to anything that the jwt token is generated for. In this case, jwt is defined below.
+// So I used NewWithClaims()
 
 func GenerateSymmetricJWT(userId int, email string) (string, error) {
 	claims := jwt.MapClaims{

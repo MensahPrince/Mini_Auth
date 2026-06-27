@@ -22,3 +22,8 @@ type USEROBJECT struct {
 	Name string
 	Email string
 }
+
+type USERDATA struct {
+	Name string
+	Email string
+}
