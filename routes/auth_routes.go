@@ -14,4 +14,5 @@ func SetupAuthRoutes(app *fiber.App) {
 	app.Post("/edit/:param", middleware.JWTMiddleware, handlers.EditHandler)
 	app.Get("/request-otp", middleware.JWTMiddleware, handlers.RequestOTP)
 	app.Post("/reset", middleware.JWTMiddleware, handlers.ResetPassword)
+	app.Post("/delete", middleware.JWTMiddleware, handlers.DeleteAccount)
 }
