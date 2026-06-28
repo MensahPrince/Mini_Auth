@@ -17,13 +17,18 @@ type USERLOGIN struct {
 }
 
 type USEROBJECT struct {
-	Id int
+	Id       int
 	Password string
-	Name string
-	Email string
+	Name     string
+	Email    string
 }
 
 type USERDATA struct {
-	Name string
+	Name  string
 	Email string
+}
+
+type REQUEST struct {
+	Password string `json:"password"`
+	OTP      int `json:"otp"`
 }
