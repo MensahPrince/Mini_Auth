@@ -1,79 +1,111 @@
 # Mini Auth
 
-A simple Go mini authentication system built with Fiber and MySQL.
+Mini Auth is a small authentication service built with Go, Fiber, MySQL, JWT, and bcrypt. It is intended as a lightweight starter project for handling user registration, login, protected profile access, profile updates, account deletion, and password reset.
 
-## What is implemented so far
+## What this project covers
 
-- HTTP server using `github.com/gofiber/fiber/v3`
-- MySQL database connection via `database/sql` and `github.com/go-sql-driver/mysql`
-- Environment configuration loading with `github.com/joho/godotenv`
-- Basic health/status endpoint at `/`
-- User creation endpoint at `/add`
-- DB connection checker utility
-- Shared types for `USER` and `DBSTATUS`
+- User registration with password hashing
+- User login and JWT-based authentication
+- Protected profile retrieval
+- Profile editing for name and email
+- Account deletion after password confirmation
+- OTP-based password reset flow
+- MySQL-backed persistence with environment-based configuration
 
 ## Project structure
 
-- `main.go` — application entry point and route definitions
-- `db/db.go` — database connection setup and pool configuration
-- `utils/utils.go` — database health check helper
-- `types/types.go` — shared domain types
+- main.go — application entry point and server bootstrap
+- handlers/ — request handlers for auth, profile, OTP, and account management
+- middleware/authware.go — JWT authentication middleware
+- routes/auth_routes.go — API route registration
+- db/db.go — MySQL connection setup
+- utils/ — password hashing, OTP generation, and supporting helpers
+- types/ — request and response payload definitions
 
-## API Endpoints
+## API endpoints
 
-### GET `/`
+### GET /
 
-Returns a JSON status response. Example:
+Returns a basic health/status response.
 
-{
-  "status": {
-    "Success": true,
-    "Message": "Connected"
-  },
-  "server": "mini_auth"
-}
+### POST /register
 
-### POST `/add`
+Creates a new user account.
 
-Adds a new user record to the `users` table.
+Example body:
 
-Expected JSON body:
-
+```json
 {
   "name": "Jane Doe",
   "email": "jane@example.com",
   "password": "password123"
 }
+```
 
-Response on success:
+The password is hashed before being stored.
 
+### POST /login
+
+Authenticates a user and returns a JWT.
+
+Example body:
+
+```json
 {
-  "message": "Success",
-  "name": "Jane Doe",
   "email": "jane@example.com",
   "password": "password123"
 }
+```
+
+### GET /profile
+
+Requires a Bearer token in the Authorization header.
+
+### POST /edit/:param
+
+Requires authentication. Use `name` or `email` as the route parameter to update the corresponding field.
+
+### GET /request-otp
+
+Requires authentication. Returns a one-time password value for development/testing purposes.
+
+### POST /reset
+
+Requires authentication. Expects an OTP and a new password.
+
+Example body:
+
+```json
+{
+  "otp": 1234,
+  "password": "newpassword123"
+}
+```
+
+### POST /delete
+
+Requires authentication. Expects the current password for confirmation.
 
 ## Environment variables
 
-The application expects a `.env` file with the following values:
+Create a `.env` file with the following values:
 
-- `DB_HOST`
-- `DB_USER`
-- `DB_PASS`
-- `DB_NAME`
+- DB_HOST
+- DB_USER
+- DB_PASS
+- DB_NAME
+- JWT_KEY
 
-## How to run
+## Running locally
 
-1. Install Go 1.26 or newer.
-2. Create a `.env` file with MySQL credentials.
-3. Run `go mod tidy` to download dependencies.
+1. Install Go and MySQL.
+2. Create a `.env` file with the required values.
+3. Run `go mod tidy`.
 4. Start the server with `go run main.go`.
-5. The app listens on port `3000`.
+5. The app listens on port `3000` by default.
 
 ## Notes
 
-- Passwords are currently stored directly as provided; password hashing is not implemented yet.
-- There is no authentication, validation, or error handling beyond basic request parsing and insert failure handling.
-- The `users` table must exist in the configured MySQL database.
-- The project is currently focused on a minimal API for adding users and checking DB connectivity.
+- This project is a lightweight authentication starter and is not a full production-ready identity platform.
+- OTP values are currently returned directly in the response for development convenience.
+- The application expects a `users` table in the configured MySQL database.
